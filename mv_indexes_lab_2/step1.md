@@ -1,5 +1,5 @@
 
-In this step, you'll set up the environment by creating a one-node ScyllaDB cluster. You’ll then connect to the cluster with the CQL Shell, create a keyspace, a table, insert some data into the newly created table, and read the data. Next you'll consider what can be done if you want to query the table by a field that isn't part of the primary key. 
+In this step, you'll set up the environment by creating a one-node ScyllaDB cluster. You’ll then connect to the cluster with the CQL Shell, create a keyspace, and a table, insert some data into the newly created table, and read the data. Next, you'll consider what can be done if you want to query the table by a field that isn't part of the primary key. 
 
 ![](https://university.scylladb.com/800x400-blog-allow-filtering/)
 
@@ -7,13 +7,13 @@ In this step, you'll set up the environment by creating a one-node ScyllaDB clus
 
 Start by creating a Docker container with ScyllaDB. This tutorial was created with version 4.3:
 
-`docker run --name scylla-si -d scylladb/scylla:4.3.0 --overprovisioned 1 --smp 1`{{execute}}
+`docker run --name scylla-si -d scylladb/scylla:5.2.0 --overprovisioned 1 --smp 1`{{execute}}
 
 Wait a minute or so and check the node status:
 
 `docker exec -it scylla-si nodetool status`{{execute}}
 
-You’ll see that eventually, all the nodes have UN for status. U means up, and N means normal. If you get a message "nodetool: Unable to connect to ScyllaDB API server: java.net.ConnectException: Connection refused (Connection refused)", it means you have to wait a bit more for the node to be up and responding. 
+You’ll see that, eventually, all the nodes have UN for status. U means up, and N means normal. If you get a message "nodetool: Unable to connect to ScyllaDB API server: java.net.ConnectException: Connection refused (Connection refused)", it means you have to wait a bit more for the node to be up and responding. 
 
 Run the CQL Shell, and create a Keyspace:
 
@@ -21,7 +21,7 @@ Run the CQL Shell, and create a Keyspace:
 
 `cqlsh`{{execute}}
 
-`CREATE KEYSPACE restaurant_chain WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };`{{execute}}
+`CREATE KEYSPACE restaurant_chain WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'replication_factor' : 1 };`{{execute}}
 
 Keep in mind that SimpleStrategy should not be used in production. Learn more about this in the Replication Factor [lesson](https://university.scylladb.com/courses/scylla-essentials-overview/lessons/architecture/topic/replication-strategy/).
 
@@ -56,7 +56,7 @@ But wait! This is a full table scan. This could have been a problem if we didn�
 
 `SELECT * FROM menus where city = 'Warsaw';`{{execute}}
 
-If we had a lot of data this would perform very well.
+If we had a lot of data, this would perform very well.
 
 But what if we wanted to query by other fields? Let’s try.
 
@@ -70,7 +70,7 @@ How about other fields?
 
 We get the same error.
 
-If we add “ALLOW FILTERING” to the above queries they would work. But just like our first query, because we are querying regular columns it would be a full table scan – VERY INEFFICIENT!
+If we add “ALLOW FILTERING” to the above queries, they will work. But just like our first query, because we are querying regular columns, it would be a full table scan – VERY INEFFICIENT!
 Indexes to the rescue!
 
 Let’s take a look at our current schema.
