@@ -15,7 +15,7 @@ Start a one-node cluster with Alternator enabled.
 
 By default, ScyllaDB does not listen to DynamoDB API requests. To enable such requests, set the alternator-port configuration option to the port (8000 in this example), which will listen for DynamoDB API requests.
 
-`docker run  --name some-scylla --hostname some-scylla -p 8000:8000 -d scylladb/scylla:4.3.0 --smp 1 --overprovisioned 1 --alternator-port=8000 --alternator-write-isolation=always`{{execute}}
+`docker run  --name some-scylla --hostname some-scylla -p 8000:8000 -d scylladb/scylla:5.2.0 --smp 1 --overprovisioned 1 --alternator-port=8000 --alternator-write-isolation=always`{{execute}}
 
 Wait a few seconds and make sure the cluster is up and running:
 
