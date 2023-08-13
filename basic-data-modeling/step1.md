@@ -5,14 +5,24 @@ Similar to what we saw in the previous labs, we'll start by creating a single no
 ## Create a ScyllaDB Cluster and Simple Primary Key
 
 To recap the [lesson](https://university.scylladb.com/courses/data-modeling/lessons/basic-data-modeling-2/), a cluster is a collection of nodes that ScyllaDB uses to store the data. The nodes are logically distributed like a ring. A minimum production cluster typically consists of at least three nodes. Data is automatically replicated across the cluster, depending on the Replication Factor. This cluster is often referred to as a ring architecture, based on a hash ring — the way the cluster knows how to distribute data across the different nodes.
-For this demo, a one-node cluster is sufficient. 
-Start a single node cluster and call it ScyllaU:
 
-`docker run --name scyllaU -d scylladb/scylla:4.3.0 --overprovisioned 1 --smp 1`{{execute}}
+Before starting the cluster, increase the aio-max-nr value. 
 
-` docker run --name scyllaY -d scylladb/scylla:4.3.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' scyllaU)"`{{execute}} 
+This parameter determines the maximum number of allowable Asynchronous non-blocking I/O (AIO) concurrent requests by the Linux Kernel and it helps ScyllaDB perform in a heavy I/O workload environment.
+
+`echo "fs.aio-max-nr = 1048576" >> /etc/sysctl.conf`{{execute}}
+
+
+`sysctl -p /etc/sysctl.conf`{{execute}}
+
+
+Next, start a three node cluster:
+
+`docker run --name scyllaU -d scylladb/scylla:5.2.0 --overprovisioned 1 --smp 1`{{execute}}
+
+` docker run --name scyllaY -d scylladb/scylla:5.2.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' scyllaU)"`{{execute}} 
  
-`docker run --name scyllaZ -d scylladb/scylla:4.3.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' scyllaU)"`{{execute}} 
+`docker run --name scyllaZ -d scylladb/scylla:5.2.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' scyllaU)"`{{execute}} 
 
 
 As we previously saw, some files will be downloaded in this step. After the download, wait for a minute or two and verify that the cluster is up and running with the Nodetool Status command:
