@@ -4,9 +4,18 @@ These topics are explained in more detail in [this course](https://university.sc
 
 ## Setting Up the Environment
 
+Before starting the cluster, increase the aio-max-nr value. 
+
+This parameter determines the maximum number of allowable Asynchronous non-blocking I/O (AIO) concurrent requests by the Linux Kernel and it helps ScyllaDB perform in a heavy I/O workload environment.
+
+`echo "fs.aio-max-nr = 1048576" >> /etc/sysctl.conf`{{execute}}
+
+
+`sysctl -p /etc/sysctl.conf`{{execute}}
+
 Start by creating a three-node ScyllaDB cluster using Docker. Create one node, called Node_X:
 
-`docker run --name Node_X -d scylladb/scylla:4.3.0 --overprovisioned 1 --smp 1`{{execute}}
+`docker run --name Node_X -d scylladb/scylla:5.2.0 --overprovisioned 1 --smp 1`{{execute}}
 
 You can learn more about best practices for running ScyllaDB on Docker [here](https://docs.scylladb.com/operating-scylla/procedures/tips/best_practices_scylla_on_docker/).
  
@@ -14,10 +23,10 @@ Create two more nodes, Node_Y and Node_Z, and add them to the cluster of Node_X.
 
 The command “$(docker inspect –format='{{ .NetworkSettings.IPAddress }}’ Node_X)” translates to the IP address of Node-X: 
  
-`docker run --name Node_Y -d scylladb/scylla:4.3.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' Node_X)"`{{execute}} 
+`docker run --name Node_Y -d scylladb/scylla:5.2.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' Node_X)"`{{execute}} 
  
  
-`docker run --name Node_Z -d scylladb/scylla:4.3.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' Node_X)"`{{execute}} 
+`docker run --name Node_Z -d scylladb/scylla:5.2.0 --overprovisioned 1 --smp 1 --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' Node_X)"`{{execute}} 
 
 Wait a minute or so and check the node status:
 
