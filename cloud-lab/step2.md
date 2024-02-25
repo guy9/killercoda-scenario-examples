@@ -26,7 +26,7 @@ Since the Katacoda platform uses a dynamic list of public servers spread around 
 Now that the IP address of the Katacoda machine is whitelisted, we can connect to the cluster. Copy the password from the Instructions tab and the IP address of one of the ScyllaDB nodes from the General tab. Run the following command with the password and the IP address you copied:
 
 
-`docker run -it --rm --entrypoint cqlsh scylladb/scylla -u scylla -p *************** 1.1.1.1`{{copy}}
+`docker run -it --rm --entrypoint cqlsh scylladb/scylla-cqlsh -u scylla -p *************** 1.1.1.1`{{copy}}
 
 Next, create a Keyspace called mykeyspace (notice that if you changed the AWS Region, you have to change the command accordingly):
 
