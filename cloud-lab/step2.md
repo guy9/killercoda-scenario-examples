@@ -47,7 +47,6 @@ Next, create a Table:
 
 A [Table](https://university.scylladb.com/courses/data-modeling/lessons/basic-data-modeling-2/topic/table-and-basic-concepts/) is how ScyllaDB stores data and can be thought of as a set of rows and columns.
 
-![](https://university.scylladb.com/wp-content/uploads/2019/04/primary_key-2.png#main)
 
 Insert some data into the newly created table:
 
